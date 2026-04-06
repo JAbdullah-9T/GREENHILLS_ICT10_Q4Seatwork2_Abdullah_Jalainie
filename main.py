@@ -1,37 +1,66 @@
 from pyscript import document, display
 
-students = []
+class StudentManager:
+    def __init__(self):
+        self.students = []
 
-# ADD STUDENT FUNCTION
+    # ADD STUDENT METHOD
+    def addStudent(self, e):
+        name = document.getElementById("name").value.strip()
+        section = document.getElementById("section").value.strip()
+        fsub = document.getElementById("fsub").value.strip()
+
+        output = document.getElementById("output")
+
+        # Validation
+        if not name or not section or not fsub:
+            output.innerHTML = "<div class='alert alert-danger'>Please fill all fields.</div>"
+            return
+
+        student = {
+            "name": name,
+            "section": section,
+            "fsub": fsub
+        }
+
+        self.students.append(student)
+
+        output.innerHTML = "<div class='alert alert-success'>Classmate added successfully!</div>"
+
+        # Clear inputs
+        document.getElementById("name").value = ""
+        document.getElementById("section").value = ""
+        document.getElementById("fsub").value = ""
+
+    # SHOW STUDENTS METHOD
+    def showStudents(self, e):
+        output = document.getElementById("output")
+
+        if len(self.students) == 0:
+            output.innerHTML = "<div class='alert alert-warning'>No classmates yet.</div>"
+            return
+
+        html = "<h5>Student List</h5><hr>"
+
+        for i, student in enumerate(self.students):
+            html += f"""
+            <div class="card mb-2 p-2">
+                <strong>Classmate {i+1}</strong><br>
+                Name: {student['name']}<br>
+                Section: {student['section']}<br>
+                Favourite Subject: {student['fsub']}
+            </div>
+            """
+
+        output.innerHTML = html
+
+
+# Create ONE object
+manager = StudentManager()
+
+# Wrapper functions for py-click
 def addStudent(e):
-    name = document.getElementById("name").value
-    section = document.getElementById("section").value
-    fsub = document.getElementById("fsub").value
+    manager.addStudent(e)
 
-    student = {
-        "name": name,
-        "section": section,
-        "fsub": fsub
-    }
-
-    students.append(student)
-
-    output = document.getElementById("output")
-    output.innerHTML = "<p>Classmate added successfully!</p>"
-
-
-# SHOW STUDENTS FUNCTION
 def showStudents(e):
-    output = document.getElementById("output")
-    output.innerHTML = "<h5>Student List</h5><br>"
-
-    if len(students) == 0:
-        display("No classmates yet.", target="output")
-        return
-
-    for i, student in enumerate(students):
-        display(f"--- Classmate {i+1} ---", target="output")
-        display(f"Name: {student['name']}", target="output")
-        display(f"Section: {student['section']}", target="output")
-        display(f"Favourite Subject: {student['fsub']}", target="output")
-        display("----------------------", target="output")
+    manager.showStudents(e)
