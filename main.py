@@ -1,4 +1,4 @@
-from pyscript import document, display
+from pyscript import document
 
 class StudentManager:
     def __init__(self):
